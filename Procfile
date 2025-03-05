@@ -1,1 +1,1 @@
-web: gunicorn app:app
+web: gunicorn MVP405.app:app
