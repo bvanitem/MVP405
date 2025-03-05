@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Person</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Add New Person</h1>
+    <form method="POST">
+        <label>First Name:</label>
+        <input type="text" name="first_name" required><br>
+        <label>Last Name:</label>
+        <input type="text" name="last_name" required><br>
+        <label>Address ID:</label>
+        <select name="address_id" required>
+            {% for address in addresses %}
+                <option value="{{ address.AddressID }}">{{ address.Street }}, {{ address.City }}</option>
+            {% endfor %}
+        </select><br>
+        <button type="submit">Add Person</button>
+    </form>
+    <a href="{{ url_for('index') }}">Cancel</a>
+</body>
+</html>

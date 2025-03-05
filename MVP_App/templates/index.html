@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MVP405 - Persons</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Persons</h1>
+    <ul>
+        {% for person in persons %}
+            <li><a href="{{ url_for('person_detail', person_id=person.PersonID) }}">{{ person.FirstName }} {{ person.LastName }}</a></li>
+        {% endfor %}
+    </ul>
+    <a href="{{ url_for('add_person') }}">Add New Person</a>
+    <a href="{{ url_for('login') }}">Login</a>
+</body>
+</html>

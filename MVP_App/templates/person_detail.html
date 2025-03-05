@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Person Details</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>{{ person.FirstName }} {{ person.LastName }}</h1>
+    <p>Address: {{ address.Street }}, {{ address.City }}, {{ address.State }} {{ address.Zip }}</p>
+    <a href="{{ url_for('index') }}">Back to List</a>
+</body>
+</html>
