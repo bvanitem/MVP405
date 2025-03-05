@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Assign Truck to Shipment</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Assign Truck to Shipment #{{ shipment.ShipmentID }}</h1>
+    <form method="POST">
+        <label>Truck:</label>
+        <select name="truck_id" required>
+            {% for truck in trucks %}
+                <option value="{{ truck.TruckID }}">{{ truck.LicensePlate }} (Capacity: {{ truck.Capacity }})</option>
+            {% endfor %}
+        </select><br>
+        <button type="submit">Assign</button>
+    </form>
+    <a href="{{ url_for('shipments') }}">Cancel</a>
+</body>
+</html>

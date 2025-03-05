@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Trucks</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Trucks</h1>
+    <table border="1">
+        <tr>
+            <th>ID</th>
+            <th>License Plate</th>
+            <th>Driver</th>
+            <th>Status</th>
+            <th>Capacity</th>
+            <th>Last Maintenance</th>
+        </tr>
+        {% for truck in trucks %}
+            <tr>
+                <td>{{ truck.TruckID }}</td>
+                <td>{{ truck.LicensePlate }}</td>
+                <td>{{ truck.Driver or 'No Driver' }}</td>
+                <td>{{ truck.Status }}</td>
+                <td>{{ truck.Capacity }}</td>
+                <td>{{ truck.LastMaintenance }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+    <a href="{{ url_for('add_truck') }}">Add/Update Truck</a>
+    <a href="{{ url_for('dashboard') }}">Back to Home</a>
+</body>
+</html>

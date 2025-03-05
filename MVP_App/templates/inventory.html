@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Inventory</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Inventory</h1>
+    <table border="1">
+        <tr>
+            <th>ID</th>
+            <th>Warehouse</th>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Last Updated</th>
+        </tr>
+        {% for item in inventory %}
+            <tr>
+                <td>{{ item.InventoryID }}</td>
+                <td>{{ item.Warehouse }}</td>
+                <td>{{ item.Product }}</td>
+                <td>{{ item.Quantity }}</td>
+                <td>{{ item.LastUpdated }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+    <a href="{{ url_for('add_inventory') }}">Add/Update Inventory</a>
+    <a href="{{ url_for('dashboard') }}">Back to Home</a>
+</body>
+</html>

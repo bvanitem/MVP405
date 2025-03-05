@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Welcome, {{ user.username }} (Role: {{ user.role }})</h1>
+    <p>Logged in as {{ user.username }} with role {{ user.role }}.</p>
+    <ul>
+        <li><a href="{{ url_for('inventory') }}">View Inventory</a></li>
+        <li><a href="{{ url_for('trucks') }}">View Trucks</a></li>
+        <li><a href="{{ url_for('shipments') }}">View Shipments</a></li>
+        {% if user.role == 'admin' %}
+            <li><a href="{{ url_for('add_person') }}">Add Person</a></li>
+            <li><a href="{{ url_for('add_inventory') }}">Add/Update Inventory</a></li>
+            <li><a href="{{ url_for('add_truck') }}">Add/Update Truck</a></li>
+        {% endif %}
+        <li><a href="{{ url_for('logout') }}">Logout</a></li>
+    </ul>
+    {% if warehouses %}
+        <h2>Warehouses</h2>
+        <ul>
+            {% for warehouse in warehouses %}
+                <li>{{ warehouse.Name }} (Managed by {{ warehouse.EmployeeID }})</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No warehouses found.</p>
+    {% endif %}
+</body>
+</html>

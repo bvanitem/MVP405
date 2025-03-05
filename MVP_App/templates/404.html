@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Page Not Found</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>404 - Page Not Found</h1>
+    <p>{{ error.description }}</p>
+    <a href="{{ url_for('dashboard') }}">Return to Home</a>
+</body>
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Inventory</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Add/Update Inventory</h1>
+    <form method="POST">
+        <label>Warehouse:</label>
+        <select name="warehouse_id" required>
+            {% for warehouse in warehouses %}
+                <option value="{{ warehouse.WarehouseID }}">{{ warehouse.Name }}</option>
+            {% endfor %}
+        </select><br>
+        <label>Product:</label>
+        <select name="product_id" required>
+            {% for product in products %}
+                <option value="{{ product.ProductID }}">{{ product.Name }}</option>
+            {% endfor %}
+        </select><br>
+        <label>Quantity:</label>
+        <input type="number" name="quantity" required><br>
+        <button type="submit">Add/Update</button>
+    </form>
+    <a href="{{ url_for('inventory') }}">Cancel</a>
+</body>
+</html>
