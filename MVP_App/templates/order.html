@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Orders</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="header-bg">
+        <img src="{{ url_for('static', filename='shiftheaderlogo.jpeg') }}" alt="Shift Header Background" class="header-image">
+    </header>
+    <div class="container">
+        <nav class="navbar">
+            <div class="navbar-brand">
+                <h1>Orders</h1>
+            </div>
+            <ul class="nav-links">
+                <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+                <li><a href="{{ url_for('add_order') }}">Add Order</a></li>
+            </ul>
+        </nav>
+        <div class="content">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Order Date</th>
+                        <th>Status</th>
+                        <!--<th>Customer ID</th>-->
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders %}
+                        <tr>
+                            <td>{{ order.OrderID }}</td>
+                            <td>{{ order.OrderDate }}</td>
+                            <td>{{ order.Status }}</td>
+                            <!--<td>{{ order.CustomerID or 'N/A' }}</td>-->
+                            <td>
+                                <a href="{{ url_for('view_order_products', order_id=order.OrderID) }}" class="action-link">View Products</a>
+                                </td>
+                                <!--<a href="{{ url_for('update_order_status', order_id=order.OrderID) }}" class="action-link">Update Status</a>
+                            </td>-->
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

@@ -307,6 +307,125 @@ def update_shipment_status(shipment_id):
 
     return render_template('update_shipment_status.html', shipment=shipment, user=current_user)
 
+# Route to view orders (read-only for all users)
+@app.route('/orders')
+@login_required
+def orders():
+    conn = get_db_connection()
+    orders = conn.execute('''
+        SELECT o.OrderID, o.OrderDate, o.Status, p.FirstName || " " || p.LastName AS Customer, w.Name AS Warehouse
+        FROM Orders o
+        JOIN Person p ON o.PersonID = p.PersonID
+        JOIN Warehouse w ON o.WarehouseID = w.WarehouseID
+    ''').fetchall()
+    conn.close()
+    return render_template('order.html', orders=orders, user=current_user)
+
+# Route to view products for a specific order (read-only)
+@app.route('/order/<int:order_id>/products')
+@login_required
+def view_order_products(order_id):
+    conn = get_db_connection()
+    order = conn.execute('SELECT * FROM Orders WHERE OrderID = ?', (order_id,)).fetchone()
+    order_products = conn.execute('''
+        SELECT op.*, p.Name AS ProductName
+        FROM OrderProducts op
+        JOIN Product p ON op.ProductID = p.ProductID
+        WHERE op.OrderID = ?
+    ''', (order_id,)).fetchall()
+    conn.close()
+    if order:
+        return render_template('order_products.html', order=order, order_products=order_products, user=current_user)
+    abort(404, description="Order not found")
+
+# Route to add a new order (admin-only)
+@app.route('/order/add', methods=['GET', 'POST'])
+@login_required
+def add_order():
+    if current_user.role != 'admin':
+        abort(403, description="Access denied. Admin privileges required.")
+    
+    conn = get_db_connection()
+    persons = conn.execute('SELECT * FROM Person').fetchall()
+    warehouses = conn.execute('SELECT * FROM Warehouse').fetchall()
+    conn.close()
+
+    if request.method == 'POST':
+        person_id = request.form['person_id']
+        warehouse_id = request.form['warehouse_id']
+        current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+        conn = get_db_connection()
+        conn.execute('INSERT INTO Orders (PersonID, WarehouseID, OrderDate, Status) VALUES (?, ?, ?, ?)',
+                     (person_id, warehouse_id, current_time, 'Pending'))
+        conn.commit()
+        conn.close()
+        return redirect(url_for('orders'))
+
+    return render_template('add_order.html', persons=persons, warehouses=warehouses, user=current_user)
+
+# Route to add a product to an order (admin-only)
+@app.route('/order/<int:order_id>/add_product', methods=['GET', 'POST'])
+@login_required
+def add_order_product(order_id):
+    if current_user.role != 'admin':
+        abort(403, description="Access denied. Admin privileges required.")
+    
+    conn = get_db_connection()
+    order = conn.execute('SELECT * FROM Orders WHERE OrderID = ?', (order_id,)).fetchone()
+    products = conn.execute('SELECT * FROM Product').fetchall()
+    conn.close()
+
+    if not order:
+        abort(404, description="Order not found")
+
+    if request.method == 'POST':
+        product_id = request.form['product_id']
+        quantity = request.form['quantity']
+        price = request.form['price']
+
+        conn = get_db_connection()
+        existing = conn.execute('SELECT * FROM OrderProducts WHERE OrderID = ? AND ProductID = ?',
+                               (order_id, product_id)).fetchone()
+        if existing:
+            conn.execute('UPDATE OrderProducts SET Quantity = ?, Price = ? WHERE OrderID = ? AND ProductID = ?',
+                        (quantity, price, order_id, product_id))
+        else:
+            conn.execute('INSERT INTO OrderProducts (OrderID, ProductID, Quantity, Price) VALUES (?, ?, ?, ?)',
+                        (order_id, product_id, quantity, price))
+        conn.commit()
+        conn.close()
+        return redirect(url_for('view_order_products', order_id=order_id))
+
+    return render_template('add_order_product.html', order=order, products=products, user=current_user)
+
+# Route to update order status (admin-only)
+@app.route('/order/<int:order_id>/update_status', methods=['GET', 'POST'])
+@login_required
+def update_order_status(order_id):
+    if current_user.role != 'admin':
+        abort(403, description="Access denied. Admin privileges required.")
+    
+    conn = get_db_connection()
+    order = conn.execute('SELECT * FROM Orders WHERE OrderID = ?', (order_id,)).fetchone()
+    conn.close()
+
+    if not order:
+        abort(404, description="Order not found")
+
+    if request.method == 'POST':
+        status = request.form['status']
+        if status not in ['Pending', 'Processing', 'Completed']:
+            return "Invalid status", 400
+
+        conn = get_db_connection()
+        conn.execute('UPDATE Orders SET Status = ? WHERE OrderID = ?', (status, order_id))
+        conn.commit()
+        conn.close()
+        return redirect(url_for('orders'))
+
+    return render_template('update_order_status.html', order=order, user=current_user)
+
 # API endpoints (read-only for all users)
 @app.route('/api/persons')
 @login_required

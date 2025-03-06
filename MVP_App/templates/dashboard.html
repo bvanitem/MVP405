@@ -18,6 +18,7 @@
                 <li><a href="{{ url_for('inventory') }}">Inventory</a></li>
                 <li><a href="{{ url_for('trucks') }}">Trucks</a></li>
                 <li><a href="{{ url_for('shipments') }}">Shipments</a></li>
+                <li><a href="{{ url_for('orders') }}">Orders</a></li>
                 {% if user.role == 'admin' %}
                     <li><a href="{{ url_for('add_person') }}">Add Person</a></li>
                     <li><a href="{{ url_for('add_inventory') }}">Add Inventory</a></li>

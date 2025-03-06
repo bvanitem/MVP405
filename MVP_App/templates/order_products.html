@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Order Products</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="header-bg">
+        <img src="{{ url_for('static', filename='shiftheaderlogo.jpeg') }}" alt="Shift Header Background" class="header-image">
+    </header>
+    <div class="container">
+        <nav class="navbar">
+            <div class="navbar-brand">
+                <h1>Order #{{ order.OrderID }} Products</h1>
+            </div>
+            <ul class="nav-links">
+                <li><a href="{{ url_for('orders') }}">Back to Orders</a></li>
+                <!--<li><a href="{{ url_for('add_order_product', order_id=order.OrderID) }}">Add Product</a></li>-->
+            </ul>
+        </nav>
+        <div class="content">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Product ID</th>
+                        <th>Product Name</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <!--<th>Actions</th>-->
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in order_products %}
+                        <tr>
+                            <td>{{ product.ProductID }}</td>
+                            <td>{{ product.ProductName or 'N/A' }}</td>
+                            <td>{{ product.Quantity }}</td>
+                            <td>{{ product.Price or 'N/A' }}</td>
+                            <!--<td>
+                                <a href="{{ url_for('add_order_product', order_id=order.OrderID, product_id=product.ProductID) }}" class="action-link">Update</a>
+                                <a href="{{ url_for('add_order_product', order_id=order.OrderID, product_id=product.ProductID) }}" class="action-link">Delete</a>
+                            </td>-->
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

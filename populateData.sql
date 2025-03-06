@@ -188,3 +188,23 @@ INSERT INTO Users (Username, Password, Role) VALUES
 ('jane_smith', 'user123', 'user'),  -- Regular user (Jane Smith)
 ('alice_johnson', 'user456', 'user'),  -- Regular user (Alice Johnson)
 ('bob_williams', 'user789', 'user');  -- Regular user (Bob Williams)
+
+-- Insert Orders
+INSERT INTO Orders (PersonID, WarehouseID, OrderDate, Status) VALUES 
+(5, 1, '2025-03-01 09:00:00', 'Pending'),  -- Charlie Brown orders from NY Warehouse
+(6, 2, '2025-03-02 10:00:00', 'Processing'),  -- Emily Davis orders from LA Warehouse
+(7, 3, '2025-03-03 11:00:00', 'Completed'),  -- Michael Wilson orders from Chicago Warehouse
+(8, 4, '2025-03-04 12:00:00', 'Pending'),  -- Sarah Taylor orders from Houston Warehouse
+(9, 5, '2025-03-05 13:00:00', 'Processing');  -- David Anderson orders from Seattle Warehouse
+
+-- Insert OrderProducts
+INSERT INTO OrderProducts (OrderID, ProductID, Quantity, Price) VALUES 
+(1, 1, 10, 19.99),  -- Charlie Brown orders 10 T-Shirts at $19.99 each
+(1, 11, 5, 9.99),   -- Charlie Brown orders 5 Cleaners at $9.99 each
+(2, 2, 20, 14.99),  -- Emily Davis orders 20 Coffee bags at $14.99 each
+(2, 12, 15, 7.99),  -- Emily Davis orders 15 Paper Towels at $7.99 each
+(3, 3, 5, 49.99),   -- Michael Wilson orders 5 Smart Speakers at $49.99 each
+(3, 13, 10, 12.99), -- Michael Wilson orders 10 Books at $12.99 each
+(4, 4, 8, 29.99),   -- Sarah Taylor orders 8 Blenders at $29.99 each
+(4, 14, 12, 15.99), -- Sarah Taylor orders 12 Toys at $15.99 each
+(5, 5, 3, 39.99);   -- David Anderson orders 3 Drills at $39.99 each

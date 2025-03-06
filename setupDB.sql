@@ -123,3 +123,25 @@ CREATE TABLE Users (
     Password TEXT NOT NULL,  -- Now stores plain text passwords
     Role TEXT NOT NULL CHECK(Role IN ('admin', 'user')) DEFAULT 'user'  -- Role for access control
 );
+
+-- New Table: Orders to track customer or warehouse orders
+CREATE TABLE Orders (
+    OrderID INTEGER PRIMARY KEY AUTOINCREMENT,
+    PersonID INTEGER,  -- Customer (using Person as a stand-in for Customer)
+    WarehouseID INTEGER,  -- Where the order is fulfilled from
+    OrderDate TEXT,  -- Use TEXT for datetime (e.g., 'YYYY-MM-DD HH:MM:SS')
+    Status TEXT,  -- e.g., 'Pending', 'Processing', 'Completed'
+    FOREIGN KEY (PersonID) REFERENCES Person(PersonID),
+    FOREIGN KEY (WarehouseID) REFERENCES Warehouse(WarehouseID)
+);
+
+-- New Table: OrderProducts to link products to orders
+CREATE TABLE OrderProducts (
+    OrderID INTEGER,
+    ProductID INTEGER,
+    Quantity INTEGER,
+    Price REAL,  -- Price per unit
+    PRIMARY KEY (OrderID, ProductID),
+    FOREIGN KEY (OrderID) REFERENCES Orders(OrderID),
+    FOREIGN KEY (ProductID) REFERENCES Product(ProductID)
+);
