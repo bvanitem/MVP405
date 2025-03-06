@@ -2,31 +2,47 @@
 <html>
 <head>
     <title>Trucks</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <h1>Trucks</h1>
-    <table border="1">
-        <tr>
-            <th>ID</th>
-            <th>License Plate</th>
-            <th>Driver</th>
-            <th>Status</th>
-            <th>Capacity</th>
-            <th>Last Maintenance</th>
-        </tr>
-        {% for truck in trucks %}
-            <tr>
-                <td>{{ truck.TruckID }}</td>
-                <td>{{ truck.LicensePlate }}</td>
-                <td>{{ truck.Driver or 'No Driver' }}</td>
-                <td>{{ truck.Status }}</td>
-                <td>{{ truck.Capacity }}</td>
-                <td>{{ truck.LastMaintenance }}</td>
-            </tr>
-        {% endfor %}
-    </table>
-    <a href="{{ url_for('add_truck') }}">Add/Update Truck</a>
-    <a href="{{ url_for('dashboard') }}">Back to Home</a>
+    <header class="header-bg">
+        <img src="{{ url_for('static', filename='shiftheaderlogo.jpeg') }}" alt="Shift Header Background" class="header-image">
+    </header>
+    <div class="container">
+        <nav class="navbar">
+            <h1>Trucks</h1>
+            <ul class="nav-links">
+                <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+                <li><a href="{{ url_for('add_truck') }}">Add/Update Truck</a></li>
+            </ul>
+        </nav>
+        <div class="content">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>License Plate</th>
+                        <th>Driver</th>
+                        <th>Status</th>
+                        <th>Capacity</th>
+                        <th>Last Maintenance</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for truck in trucks %}
+                        <tr>
+                            <td>{{ truck.TruckID }}</td>
+                            <td>{{ truck.LicensePlate }}</td>
+                            <td>{{ truck.Driver or 'No Driver' }}</td>
+                            <td>{{ truck.Status }}</td>
+                            <td>{{ truck.Capacity }}</td>
+                            <td>{{ truck.LastMaintenance }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 </body>
 </html>

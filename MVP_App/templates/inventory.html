@@ -2,29 +2,45 @@
 <html>
 <head>
     <title>Inventory</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <h1>Inventory</h1>
-    <table border="1">
-        <tr>
-            <th>ID</th>
-            <th>Warehouse</th>
-            <th>Product</th>
-            <th>Quantity</th>
-            <th>Last Updated</th>
-        </tr>
-        {% for item in inventory %}
-            <tr>
-                <td>{{ item.InventoryID }}</td>
-                <td>{{ item.Warehouse }}</td>
-                <td>{{ item.Product }}</td>
-                <td>{{ item.Quantity }}</td>
-                <td>{{ item.LastUpdated }}</td>
-            </tr>
-        {% endfor %}
-    </table>
-    <a href="{{ url_for('add_inventory') }}">Add/Update Inventory</a>
-    <a href="{{ url_for('dashboard') }}">Back to Home</a>
+    <header class="header-bg">
+        <img src="{{ url_for('static', filename='shiftheaderlogo.jpeg') }}" alt="Shift Header Background" class="header-image">
+    </header>
+    <div class="container">
+        <nav class="navbar">
+            <h1>Inventory</h1>
+            <ul class="nav-links">
+                <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+                <li><a href="{{ url_for('add_inventory') }}">Add/Update Inventory</a></li>
+            </ul>
+        </nav>
+        <div class="content">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Warehouse</th>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Last Updated</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in inventory %}
+                        <tr>
+                            <td>{{ item.InventoryID }}</td>
+                            <td>{{ item.Warehouse }}</td>
+                            <td>{{ item.Product }}</td>
+                            <td>{{ item.Quantity }}</td>
+                            <td>{{ item.LastUpdated }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 </body>
 </html>

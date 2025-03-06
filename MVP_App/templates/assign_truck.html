@@ -2,19 +2,33 @@
 <html>
 <head>
     <title>Assign Truck to Shipment</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <h1>Assign Truck to Shipment #{{ shipment.ShipmentID }}</h1>
-    <form method="POST">
-        <label>Truck:</label>
-        <select name="truck_id" required>
-            {% for truck in trucks %}
-                <option value="{{ truck.TruckID }}">{{ truck.LicensePlate }} (Capacity: {{ truck.Capacity }})</option>
-            {% endfor %}
-        </select><br>
-        <button type="submit">Assign</button>
-    </form>
-    <a href="{{ url_for('shipments') }}">Cancel</a>
+    <header class="header-bg">
+        <img src="{{ url_for('static', filename='shiftheaderlogo.jpeg') }}" alt="Shift Header Background" class="header-image">
+    </header>
+    <div class="container">
+        <nav class="navbar">
+            <h1>Assign Truck to Shipment #{{ shipment.ShipmentID }}</h1>
+            <ul class="nav-links">
+                <li><a href="{{ url_for('shipments') }}">Cancel</a></li>
+            </ul>
+        </nav>
+        <div class="content">
+            <form method="POST" class="action-form">
+                <div class="form-group">
+                    <label for="truck_id">Truck</label>
+                    <select id="truck_id" name="truck_id" required>
+                        {% for truck in trucks %}
+                            <option value="{{ truck.TruckID }}">{{ truck.LicensePlate }} (Capacity: {{ truck.Capacity }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button type="submit" class="action-button">Assign Truck</button>
+            </form>
+        </div>
+    </div>
 </body>
 </html>

@@ -2,30 +2,50 @@
 <html>
 <head>
     <title>Add Truck</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <h1>Add/Update Truck</h1>
-    <form method="POST">
-        <label>License Plate:</label>
-        <input type="text" name="license_plate" required><br>
-        <label>Driver (Employee ID):</label>
-        <select name="driver_id">
-            <option value="">No Driver</option>
-            {% for employee in employees %}
-                <option value="{{ employee.EmployeeID }}">{{ employee.FirstName }} {{ employee.LastName }}</option>
-            {% endfor %}
-        </select><br>
-        <label>Status:</label>
-        <select name="status" required>
-            <option value="Available">Available</option>
-            <option value="In Transit">In Transit</option>
-            <option value="Maintenance">Maintenance</option>
-        </select><br>
-        <label>Capacity (units):</label>
-        <input type="number" name="capacity" required><br>
-        <button type="submit">Add/Update</button>
-    </form>
-    <a href="{{ url_for('trucks') }}">Cancel</a>
+    <header class="header-bg">
+        <img src="{{ url_for('static', filename='shiftheaderlogo.jpeg') }}" alt="Shift Header Background" class="header-image">
+    </header>
+    <div class="container">
+        <nav class="navbar">
+            <h1>Add/Update Truck</h1>
+            <ul class="nav-links">
+                <li><a href="{{ url_for('trucks') }}">Cancel</a></li>
+            </ul>
+        </nav>
+        <div class="content">
+            <form method="POST" class="action-form">
+                <div class="form-group">
+                    <label for="license_plate">License Plate</label>
+                    <input type="text" id="license_plate" name="license_plate" required>
+                </div>
+                <div class="form-group">
+                    <label for="driver_id">Driver (Employee ID)</label>
+                    <select id="driver_id" name="driver_id">
+                        <option value="">No Driver</option>
+                        {% for employee in employees %}
+                            <option value="{{ employee.EmployeeID }}">{{ employee.FirstName }} {{ employee.LastName }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="status">Status</label>
+                    <select id="status" name="status" required>
+                        <option value="Available">Available</option>
+                        <option value="In Transit">In Transit</option>
+                        <option value="Maintenance">Maintenance</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="capacity">Capacity (units)</label>
+                    <input type="number" id="capacity" name="capacity" required>
+                </div>
+                <button type="submit" class="action-button">Add/Update Truck</button>
+            </form>
+        </div>
+    </div>
 </body>
 </html>

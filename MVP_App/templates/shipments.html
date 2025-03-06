@@ -2,38 +2,57 @@
 <html>
 <head>
     <title>Shipments</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <h1>Shipments</h1>
-    <table border="1">
-        <tr>
-            <th>ID</th>
-            <th>Origin Type</th>
-            <th>Origin ID</th>
-            <th>Destination Type</th>
-            <th>Destination ID</th>
-            <th>Shipment Date</th>
-            <th>Arrival Date</th>
-            <th>Status</th>
-            <th>Truck</th>
-        </tr>
-        {% for shipment in shipments %}
-            <tr>
-                <td>{{ shipment.ShipmentID }}</td>
-                <td>{{ shipment.OriginType }}</td>
-                <td>{{ shipment.OriginID }}</td>
-                <td>{{ shipment.DestinationType }}</td>
-                <td>{{ shipment.DestinationID }}</td>
-                <td>{{ shipment.ShipmentDate }}</td>
-                <td>{{ shipment.ArrivalDate or 'N/A' }}</td>
-                <td>{{ shipment.Status }}</td>
-                <td>{{ shipment.Truck or 'No Truck Assigned' }}</td>
-                <td><a href="{{ url_for('assign_truck', shipment_id=shipment.ShipmentID) }}">Assign Truck</a></td>
-                <td><a href="{{ url_for('update_shipment_status', shipment_id=shipment.ShipmentID) }}">Update Status</a></td>
-            </tr>
-        {% endfor %}
-    </table>
-    <a href="{{ url_for('dashboard') }}">Back to Home</a>
+    <header class="header-bg">
+        <img src="{{ url_for('static', filename='shiftheaderlogo.jpeg') }}" alt="Shift Header Background" class="header-image">
+    </header>
+    <div class="container">
+        <nav class="navbar">
+            <h1>Shipments</h1>
+            <ul class="nav-links">
+                <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+            </ul>
+        </nav>
+        <div class="content">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Origin Type</th>
+                        <th>Origin ID</th>
+                        <th>Destination Type</th>
+                        <th>Destination ID</th>
+                        <th>Shipment Date</th>
+                        <th>Arrival Date</th>
+                        <th>Status</th>
+                        <th>Truck</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for shipment in shipments %}
+                        <tr>
+                            <td>{{ shipment.ShipmentID }}</td>
+                            <td>{{ shipment.OriginType }}</td>
+                            <td>{{ shipment.OriginID }}</td>
+                            <td>{{ shipment.DestinationType }}</td>
+                            <td>{{ shipment.DestinationID }}</td>
+                            <td>{{ shipment.ShipmentDate }}</td>
+                            <td>{{ shipment.ArrivalDate or 'N/A' }}</td>
+                            <td>{{ shipment.Status }}</td>
+                            <td>{{ shipment.Truck or 'No Truck Assigned' }}</td>
+                            <td>
+                                <a href="{{ url_for('assign_truck', shipment_id=shipment.ShipmentID) }}" class="action-link">Assign</a>
+                                <a href="{{ url_for('update_shipment_status', shipment_id=shipment.ShipmentID) }}" class="action-link">Update</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 </body>
 </html>

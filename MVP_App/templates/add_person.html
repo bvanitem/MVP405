@@ -2,23 +2,41 @@
 <html>
 <head>
     <title>Add Person</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <h1>Add New Person</h1>
-    <form method="POST">
-        <label>First Name:</label>
-        <input type="text" name="first_name" required><br>
-        <label>Last Name:</label>
-        <input type="text" name="last_name" required><br>
-        <label>Address ID:</label>
-        <select name="address_id" required>
-            {% for address in addresses %}
-                <option value="{{ address.AddressID }}">{{ address.Street }}, {{ address.City }}</option>
-            {% endfor %}
-        </select><br>
-        <button type="submit">Add Person</button>
-    </form>
-    <a href="{{ url_for('dashboard') }}">Cancel</a>
+    <header class="header-bg">
+        <img src="{{ url_for('static', filename='shiftheaderlogo.jpeg') }}" alt="Shift Header Background" class="header-image">
+    </header>
+    <div class="container">
+        <nav class="navbar">
+            <h1>Add New Person</h1>
+            <ul class="nav-links">
+                <li><a href="{{ url_for('dashboard') }}">Cancel</a></li>
+            </ul>
+        </nav>
+        <div class="content">
+            <form method="POST" class="action-form">
+                <div class="form-group">
+                    <label for="first_name">First Name</label>
+                    <input type="text" id="first_name" name="first_name" required>
+                </div>
+                <div class="form-group">
+                    <label for="last_name">Last Name</label>
+                    <input type="text" id="last_name" name="last_name" required>
+                </div>
+                <div class="form-group">
+                    <label for="address_id">Address ID</label>
+                    <select id="address_id" name="address_id" required>
+                        {% for address in addresses %}
+                            <option value="{{ address.AddressID }}">{{ address.Street }}, {{ address.City }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button type="submit" class="action-button">Add Person</button>
+            </form>
+        </div>
+    </div>
 </body>
 </html>
