@@ -5,21 +5,17 @@ from os import path
 from datetime import datetime
 
 app = Flask(__name__)
-app.secret_key = 'your-secret-key-here'  # Replace with a secure secret key in production
+app.secret_key = 'your-secret-key-here'
 
-# Configure template and static folder paths
 app.template_folder = 'templates'
 app.static_folder = 'static'
 
-# Database configuration
 DB_NAME = "setupDB.db"
 
-# Flask-Login setup
 login_manager = LoginManager()
 login_manager.init_app(app)
-login_manager.login_view = 'login'  # Redirect unauthenticated users to /login
+login_manager.login_view = 'login'
 
-# User class for Flask-Login
 class User(UserMixin):
     def __init__(self, user_id, username, role):
         self.id = user_id
@@ -44,12 +40,10 @@ def get_db_connection():
         app.logger.error(f"Database connection error: {e}")
         abort(500, description="Database connection failed")
 
-# Route for the root URL (redirect to login for unauthenticated users)
 @app.route('/')
 def root():
     return redirect(url_for('login'))
 
-# Route for the login page (now the default landing page for unauthenticated users)
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -60,7 +54,7 @@ def login():
         user = conn.execute('SELECT UserID, Username, Password, Role FROM Users WHERE Username = ?', (username,)).fetchone()
         conn.close()
 
-        if user and password == user['Password']:  # Plain text password comparison
+        if user and password == user['Password']:
             user_obj = User(user['UserID'], user['Username'], user['Role'])
             login_user(user_obj)
             return redirect(url_for('dashboard'))
@@ -68,14 +62,12 @@ def login():
 
     return render_template('login.html')
 
-# Logout route
 @app.route('/logout')
 @login_required
 def logout():
     logout_user()
     return redirect(url_for('login'))
 
-# Dashboard route (replaces index as the starting page after login)
 @app.route('/dashboard')
 @login_required
 def dashboard():
@@ -84,7 +76,6 @@ def dashboard():
     conn.close()
     return render_template('dashboard.html', warehouses=warehouses, user=current_user)
 
-# Route to view a specific person's details (read-only for users, editable for admin)
 @app.route('/person/<int:person_id>')
 @login_required
 def person_detail(person_id):
@@ -96,7 +87,6 @@ def person_detail(person_id):
         return render_template('person_detail.html', person=person, address=address, user=current_user)
     return "Person not found", 404
 
-# Route to add/edit a person (admin-only)
 @app.route('/person/add', methods=['GET', 'POST'])
 @login_required
 def add_person():
@@ -121,7 +111,6 @@ def add_person():
 
     return render_template('add_person.html', addresses=addresses, user=current_user)
 
-# Route to view inventory (read-only for users, editable for admin)
 @app.route('/inventory')
 @login_required
 def inventory():
@@ -135,7 +124,6 @@ def inventory():
     conn.close()
     return render_template('inventory.html', inventory=inventory, user=current_user)
 
-# Route to add/update inventory (admin-only)
 @app.route('/inventory/add', methods=['GET', 'POST'])
 @login_required
 def add_inventory():
@@ -168,7 +156,6 @@ def add_inventory():
 
     return render_template('add_inventory.html', warehouses=warehouses, products=products, user=current_user)
 
-# Route to view trucks (read-only for users, editable for admin)
 @app.route('/trucks')
 @login_required
 def trucks():
@@ -184,7 +171,6 @@ def trucks():
     conn.close()
     return render_template('trucks.html', trucks=trucks, user=current_user)
 
-# Route to add/update truck (admin-only)
 @app.route('/truck/add', methods=['GET', 'POST'])
 @login_required
 def add_truck():
@@ -197,7 +183,7 @@ def add_truck():
 
     if request.method == 'POST':
         license_plate = request.form['license_plate']
-        driver_id = request.form['driver_id'] or None  # Allow no driver
+        driver_id = request.form['driver_id'] or None
         status = request.form['status']
         capacity = request.form['capacity']
 
@@ -216,7 +202,6 @@ def add_truck():
 
     return render_template('add_truck.html', employees=employees, user=current_user)
 
-# Route to assign truck to shipment (admin-only)
 @app.route('/truck/assign/<int:shipment_id>', methods=['GET', 'POST'])
 @login_required
 def assign_truck(shipment_id):
@@ -236,9 +221,7 @@ def assign_truck(shipment_id):
 
         conn = get_db_connection()
         current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        # Update Shipment with TruckID
         conn.execute('UPDATE Shipment SET TruckID = ? WHERE ShipmentID = ?', (truck_id, shipment_id))
-        # Update Truck status and create assignment
         conn.execute('UPDATE Truck SET Status = "In Transit" WHERE TruckID = ?', (truck_id,))
         conn.execute('INSERT INTO TruckAssignment (TruckID, ShipmentID, AssignmentDate) VALUES (?, ?, ?)',
                     (truck_id, shipment_id, current_time))
@@ -248,7 +231,6 @@ def assign_truck(shipment_id):
 
     return render_template('assign_truck.html', trucks=trucks, shipment=shipment, user=current_user)
 
-# Route to view shipments with trucks (read-only for users, editable for admin)
 @app.route('/shipments')
 @login_required
 def shipments():
@@ -262,7 +244,6 @@ def shipments():
     conn.close()
     return render_template('shipments.html', shipments=shipments, user=current_user)
 
-# Route to update shipment status (admin-only)
 @app.route('/shipment/<int:shipment_id>/update_status', methods=['GET', 'POST'])
 @login_required
 def update_shipment_status(shipment_id):
@@ -292,7 +273,6 @@ def update_shipment_status(shipment_id):
         conn.commit()
         conn.close()
 
-        # Update truck status if shipment is delivered
         if status == 'Delivered':
             truck_id = shipment['TruckID']
             if truck_id:
@@ -307,7 +287,6 @@ def update_shipment_status(shipment_id):
 
     return render_template('update_shipment_status.html', shipment=shipment, user=current_user)
 
-# Route to view orders (read-only for all users)
 @app.route('/orders')
 @login_required
 def orders():
@@ -321,7 +300,6 @@ def orders():
     conn.close()
     return render_template('order.html', orders=orders, user=current_user)
 
-# Route to view products for a specific order (read-only)
 @app.route('/order/<int:order_id>/products')
 @login_required
 def view_order_products(order_id):
@@ -338,7 +316,6 @@ def view_order_products(order_id):
         return render_template('order_products.html', order=order, order_products=order_products, user=current_user)
     abort(404, description="Order not found")
 
-# Route to add a new order (admin-only)
 @app.route('/order/add', methods=['GET', 'POST'])
 @login_required
 def add_order():
@@ -364,7 +341,6 @@ def add_order():
 
     return render_template('add_order.html', persons=persons, warehouses=warehouses, user=current_user)
 
-# Route to add a product to an order (admin-only)
 @app.route('/order/<int:order_id>/add_product', methods=['GET', 'POST'])
 @login_required
 def add_order_product(order_id):
@@ -399,7 +375,6 @@ def add_order_product(order_id):
 
     return render_template('add_order_product.html', order=order, products=products, user=current_user)
 
-# Route to update order status (admin-only)
 @app.route('/order/<int:order_id>/update_status', methods=['GET', 'POST'])
 @login_required
 def update_order_status(order_id):
@@ -426,7 +401,6 @@ def update_order_status(order_id):
 
     return render_template('update_order_status.html', order=order, user=current_user)
 
-# API endpoints (read-only for all users)
 @app.route('/api/persons')
 @login_required
 def api_persons():
@@ -476,7 +450,6 @@ def api_shipments():
     conn.close()
     return jsonify([dict(shipment) for shipment in shipments])
 
-# Error handlers
 @app.errorhandler(404)
 def not_found(error):
     return render_template('404.html', error=error, user=current_user if hasattr(current_user, 'is_authenticated') and current_user.is_authenticated else None), 404
