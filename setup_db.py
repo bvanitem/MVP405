@@ -8,7 +8,7 @@ DB_NAME = "setupDB.db"
 
 def init_db():
     if os.path.exists(DB_NAME):
-        os.remove(DB_NAME)  # Remove existing database to start fresh (optional)
+        os.remove(DB_NAME)
 
     conn = sqlite3.connect(DB_NAME)
     cursor = conn.cursor()
