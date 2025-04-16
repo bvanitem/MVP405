@@ -1,5 +1,3 @@
--- setupDB.sql for SQLite
-
 CREATE TABLE Address (
     AddressID INTEGER PRIMARY KEY AUTOINCREMENT,
     Street TEXT,
@@ -47,8 +45,8 @@ CREATE TABLE Vendor (
 CREATE TABLE Product (
     ProductID INTEGER PRIMARY KEY AUTOINCREMENT,
     Name TEXT,
-    Expiration TEXT,  -- Use TEXT for dates (e.g., 'YYYY-MM-DD')
-    ReceivedDate TEXT,  -- Use TEXT for datetimes (e.g., 'YYYY-MM-DD HH:MM:SS')
+    Expiration TEXT,
+    ReceivedDate TEXT,
     VendorID INTEGER,
     FOREIGN KEY (VendorID) REFERENCES Vendor(VendorID)
 );
@@ -63,14 +61,14 @@ CREATE TABLE VendorProducts (
 
 CREATE TABLE Shipment (
     ShipmentID INTEGER PRIMARY KEY AUTOINCREMENT,
-    OriginType TEXT,  -- Use TEXT instead of ENUM (e.g., 'Vendor', 'Warehouse', 'Depot')
+    OriginType TEXT,
     OriginID INTEGER,
-    DestinationType TEXT,  -- Use TEXT instead of ENUM (e.g., 'Warehouse', 'Depot')
+    DestinationType TEXT,
     DestinationID INTEGER,
-    ShipmentDate TEXT,  -- Use TEXT for datetime (e.g., 'YYYY-MM-DD HH:MM:SS')
-    ArrivalDate TEXT,  -- Use TEXT for datetime
-    Status TEXT,  -- Use TEXT instead of ENUM (e.g., 'Pending', 'In Transit', 'Delivered')
-    TruckID INTEGER,  -- New field to track which truck is used for the shipment
+    ShipmentDate TEXT,
+    ArrivalDate TEXT,
+    Status TEXT,
+    TruckID INTEGER,
     FOREIGN KEY (TruckID) REFERENCES Truck(TruckID)
 );
 
@@ -83,64 +81,58 @@ CREATE TABLE ShipmentDetails (
     FOREIGN KEY (ProductID) REFERENCES Product(ProductID)
 );
 
--- New Table: Inventory to track product quantities in warehouses
 CREATE TABLE Inventory (
     InventoryID INTEGER PRIMARY KEY AUTOINCREMENT,
     WarehouseID INTEGER,
     ProductID INTEGER,
     Quantity INTEGER DEFAULT 0,
-    LastUpdated TEXT,  -- Use TEXT for datetime (e.g., 'YYYY-MM-DD HH:MM:SS')
+    LastUpdated TEXT,
     FOREIGN KEY (WarehouseID) REFERENCES Warehouse(WarehouseID),
     FOREIGN KEY (ProductID) REFERENCES Product(ProductID)
 );
 
--- New Table: Truck to track trucks and their status
 CREATE TABLE Truck (
     TruckID INTEGER PRIMARY KEY AUTOINCREMENT,
     LicensePlate TEXT UNIQUE,
-    DriverID INTEGER,  -- Reference to Employee
-    Status TEXT,  -- e.g., 'Available', 'In Transit', 'Maintenance'
-    Capacity INTEGER,  -- Maximum weight or volume capacity (in units)
-    LastMaintenance TEXT,  -- Use TEXT for datetime (e.g., 'YYYY-MM-DD HH:MM:SS')
+    DriverID INTEGER,
+    Status TEXT,
+    Capacity INTEGER,
+    LastMaintenance TEXT,
     FOREIGN KEY (DriverID) REFERENCES Employee(EmployeeID)
 );
 
--- New Table: TruckAssignment to track truck assignments to shipments
 CREATE TABLE TruckAssignment (
     AssignmentID INTEGER PRIMARY KEY AUTOINCREMENT,
     TruckID INTEGER,
     ShipmentID INTEGER,
-    AssignmentDate TEXT,  -- Use TEXT for datetime (e.g., 'YYYY-MM-DD HH:MM:SS')
-    ReturnDate TEXT,  -- Use TEXT for datetime (optional, for tracking return)
+    AssignmentDate TEXT,
+    ReturnDate TEXT,
     FOREIGN KEY (TruckID) REFERENCES Truck(TruckID),
     FOREIGN KEY (ShipmentID) REFERENCES Shipment(ShipmentID)
 );
 
--- New Table: Users for authentication
 CREATE TABLE Users (
     UserID INTEGER PRIMARY KEY AUTOINCREMENT,
     Username TEXT UNIQUE NOT NULL,
-    Password TEXT NOT NULL,  -- Now stores plain text passwords
-    Role TEXT NOT NULL CHECK(Role IN ('admin', 'user')) DEFAULT 'user'  -- Role for access control
+    Password TEXT NOT NULL,
+    Role TEXT NOT NULL CHECK(Role IN ('admin', 'user')) DEFAULT 'user'
 );
 
--- New Table: Orders to track customer or warehouse orders
 CREATE TABLE Orders (
     OrderID INTEGER PRIMARY KEY AUTOINCREMENT,
-    PersonID INTEGER,  -- Customer (using Person as a stand-in for Customer)
-    WarehouseID INTEGER,  -- Where the order is fulfilled from
-    OrderDate TEXT,  -- Use TEXT for datetime (e.g., 'YYYY-MM-DD HH:MM:SS')
-    Status TEXT,  -- e.g., 'Pending', 'Processing', 'Completed'
+    PersonID INTEGER,
+    WarehouseID INTEGER,
+    OrderDate TEXT,
+    Status TEXT,
     FOREIGN KEY (PersonID) REFERENCES Person(PersonID),
     FOREIGN KEY (WarehouseID) REFERENCES Warehouse(WarehouseID)
 );
 
--- New Table: OrderProducts to link products to orders
 CREATE TABLE OrderProducts (
     OrderID INTEGER,
     ProductID INTEGER,
     Quantity INTEGER,
-    Price REAL,  -- Price per unit
+    Price REAL,
     PRIMARY KEY (OrderID, ProductID),
     FOREIGN KEY (OrderID) REFERENCES Orders(OrderID),
     FOREIGN KEY (ProductID) REFERENCES Product(ProductID)
